@@ -8,16 +8,31 @@ import { UserContext } from '../../Context/UserContext';
 export default function RegistrationDropdowns({formRef,setActiveStep}) {
 
 let {specialities}=useContext(UserContext)
+
 ///////////
 let {register,handleSubmit,formState:{errors}}=useForm();
+const [error, setError] = useState()
   const onSubmit=async (data)=>{
-    console.log(data);
-    alert("done RegistrationDropdowns")
-    setActiveStep(2)  
+
+    try {
+      // let response = await axios.post("https://uat-icons.com/Quote2supply/api/register", data)
+      // localStorage.setItem('materialsToken', response.data.data.token);
+      // console.log(response);
+      // console.log(response?.data.data.token);
+      //  setError(response?.data)
+      setActiveStep(2)
+    }
+    catch (error) {
+        // setError(error?.response?.data?.meta?.errors)
+      
+    }
+    
 }
 
 /////////
 const [Countries,setCountries] = useState([]);
+console.log(Countries);
+
 const getCountries= async ()=>{
   try{
       let response=await axios.get(`https://uat-icons.com/Quote2supply/api/countries`)
@@ -26,7 +41,6 @@ const getCountries= async ()=>{
       console.log(error);
   }
 }
-console.log(Countries);
 
 useEffect(()=>{
   getCountries()
@@ -36,6 +50,9 @@ const [selectedCountry, setSelectedCountry] = useState('');
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);
   };
+
+  console.log("selectCountry",selectedCountry);
+  
 
   return (
     <>
@@ -55,8 +72,8 @@ const [selectedCountry, setSelectedCountry] = useState('');
                                 // }
                               })}
                          />
+                        {error?.full_name && <p className='alert alert-danger mt-2'>{error?.full_name}</p>}
                     </div>
-                    {errors.full_name && <p className='alert alert-danger'>{errors.full_name.message}</p> }
 
                     <div className="mb-3 w-50 p-3">
                         <label htmlFor="exampleInputEmailAddress" className="form-label">Email Address *</label>
@@ -69,8 +86,8 @@ const [selectedCountry, setSelectedCountry] = useState('');
                             // }
                           })}
                         />
+                        {error?.email && <p className='alert alert-danger mt-2'>{error?.email}</p>}
                     </div>
-                    {errors.email && <p className='alert alert-danger'>{errors.email.message}</p> }
                 </div>
 
                 <div className='d-flex align-items-center justify-content-between'>
@@ -92,10 +109,9 @@ const [selectedCountry, setSelectedCountry] = useState('');
                                 // }
                               })}
                             />
+                            {error?.phone && <p className='alert alert-danger mt-2'>{error?.phone}</p>}
                         </div>
                     </div>
-                    {errors.phone && <p className='alert alert-danger'>{errors.phone.message}</p> }
-
                     
                     <div className="mb-3 w-50 p-3">
                       <label htmlFor="exampleSelect" className="form-label">
@@ -112,14 +128,47 @@ const [selectedCountry, setSelectedCountry] = useState('');
                       >
                         <option value="" disabled selected>Select</option>
                         {specialities && specialities.map((speciality, index) => (
-                          <option key={index} value={speciality.user_type}>
+                          <option key={index} value={speciality.id}>
                             {speciality.name} 
                           </option>
                         ))}
                       </select>
+                      {error?.speciality_id && <p className='alert alert-danger mt-2'>{error?.speciality_id}</p>}
                     </div>
-                    {errors.speciality_id && <p className='alert alert-danger'>{errors.speciality_id.message}</p> }
+                </div>
 
+
+
+                <div className='d-flex align-items-center justify-content-between'>
+                    <div className="mb-3 w-50 p-3">
+                        <label htmlFor="exampleInputPassword" className="form-label">Password *</label>
+                        <input required type="password" placeholder='*****' className="form-control py-3" id="exampleInputPassword" aria-describedby="emailHelp"
+                           {...register("password",{
+                            required:"password is required",
+                            // pattern:{
+                            //   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            //   message:'Invalid Mail'
+                            // }
+                          })}
+                        />
+                        {error?.password && <p className='alert alert-danger mt-2'>{error?.password}</p>}
+                    </div>
+                    
+
+                    <div className="mb-3 w-50 p-3">
+                        <label htmlFor="exampleInputConfirmPassword" className="form-label">Confirm Password *</label>
+                        <input required type="password" placeholder='*****' className="form-control py-3" id="exampleInputConfirmPassword"
+                           {...register("password_confirmation",{
+                            required:"password confirmation is required",
+                            // pattern:{
+                            //   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            //   message:'Invalid Mail'
+                            // }
+                          })}
+                        />
+                        {error?.password_confirmation && <p className='alert alert-danger mt-2'>{error?.password_confirmation}</p>}
+                    </div>
+                    
                 </div>
 
                     {/* Country and city  */}
@@ -141,23 +190,28 @@ const [selectedCountry, setSelectedCountry] = useState('');
                     >
                       <option value="" disabled selected>Select</option>
                       {Countries && Countries.map((Countrie, index) => (
-                        <option key={index} >
+                        <option key={index} value={Countrie.id} >
                           {Countrie.name}
                         </option>
                       ))}
                     </select>
+                    {error?.country_id && <p className='alert alert-danger mt-2'>{error?.country_id}</p>}
                   </div>
-                  {errors.country_id && <p className='alert alert-danger'>{errors.country_id.message}</p>}
+                  
                   <div className="mb-3 w-50 p-3">
-                    {selectedCountry ==='Saudi Arabia' && (
+                    {selectedCountry ==='1' && (
                       <>
                         {Countries[0].cities && Countries[0].cities.length > 0 ? (
                           <>
                             <label htmlFor="cities" className="form-label">Personal City</label>
-                            <select id="cities" className="form-select py-3">
+                            <select id="cities" className="form-select py-3"
+                            {...register("city_id", {
+              
+                            })}
+                            >
                               {Countries[0].cities.map((city, index) => (
                                 <>
-                                  <option key={index} >
+                                  <option key={index} value={city.id} >
                                     {city.name}
                                   </option>
                                 </>
@@ -168,15 +222,19 @@ const [selectedCountry, setSelectedCountry] = useState('');
                         ) : ""}
                       </>
                     )}
-                      {selectedCountry ==='Egypt' && (
+                      {selectedCountry ==='2' && (
                       <>
                         {Countries[1].cities && Countries[1].cities.length > 0 ? (
                           <>
                             <label htmlFor="cities" className="form-label">Personal City</label>
-                            <select id="cities" className="form-select py-3">
+                            <select id="cities" className="form-select py-3"
+                            {...register("city_id", {
+              
+                            })}
+                            >
                               {Countries[1].cities.map((city, index) => (
                                 <>
-                                  <option key={index} >
+                                  <option key={index} value={city.id} >
                                     {city.name}
                                   </option>
                                 </>
@@ -187,15 +245,19 @@ const [selectedCountry, setSelectedCountry] = useState('');
                         ) : ""}
                       </>
                     )}
-                         {selectedCountry ==='Qatar' && (
+                         {selectedCountry ==='3' && (
                       <>
                         {Countries[2].cities && Countries[2].cities.length > 0 ? (
                           <>
                             <label htmlFor="cities" className="form-label">Personal City</label>
-                            <select id="cities" className="form-select py-3">
+                            <select id="cities" className="form-select py-3"
+                            {...register("city_id", {
+              
+                            })}
+                            >
                               {Countries[2].cities.map((city, index) => (
                                 <>
-                                  <option key={index} >
+                                  <option key={index} value={city.id} >
                                     {city.name}
                                   </option>
                                 </>
@@ -211,41 +273,13 @@ const [selectedCountry, setSelectedCountry] = useState('');
 
                 {/* end */}
 
-                <div className='d-flex align-items-center justify-content-between'>
-                    <div className="mb-3 w-50 p-3">
-                        <label htmlFor="exampleInputPassword" className="form-label">Password *</label>
-                        <input required type="password" placeholder='*****' className="form-control py-3" id="exampleInputPassword" aria-describedby="emailHelp"
-                           {...register("password",{
-                            required:"password is required",
-                            // pattern:{
-                            //   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            //   message:'Invalid Mail'
-                            // }
-                          })}
-                        />
-                    </div>
-                    {errors.password && <p className='alert alert-danger'>{errors.password.message}</p> }
-
-                    <div className="mb-3 w-50 p-3">
-                        <label htmlFor="exampleInputConfirmPassword" className="form-label">Confirm Password *</label>
-                        <input required type="password" placeholder='*****' className="form-control py-3" id="exampleInputConfirmPassword"
-                           {...register("ConfirmPassword",{
-                            required:"ConfirmPassword is required",
-                            // pattern:{
-                            //   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                            //   message:'Invalid Mail'
-                            // }
-                          })}
-                        />
-                    </div>
-                </div>
+         
 
             
                 <div className="mb-3 form-check d-flex align-items-center justify-content-center">
                       <input required type="checkbox" className="form-check-input" id="exampleCheck1" />
                       <label className="form-check-label  ms-2" htmlFor="exampleCheck1">I agree to the <a>terms</a> of services and <a>privacy policy</a> </label>
                 </div>
-                {/* <button type="submit" className="btn btn-primary">Submit</button> */}
               </form>
     </div>
     

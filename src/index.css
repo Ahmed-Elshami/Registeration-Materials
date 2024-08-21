@@ -1,0 +1,270 @@
+body{
+    background-color: #0C0C0C !important;
+}
+.navbar{
+    background-color: #000;
+}
+.navbar-brand{
+    color: #FACC15 !important;
+}
+.navbarWidth{
+    width: 70% !important;
+}
+.collapse ul li a{
+    color: #fff !important;
+    
+}
+.collapse ul li a{
+    color: #fff !important;
+}
+.navBtnsignup{
+    background-color: #FACC15 !important;
+    margin: 10px;
+}
+.navBtnLogin{
+    background-color: transparent;
+    color: #fff !important;
+    margin: 10px;
+
+}
+/* ///////////////////// */
+.RegisterationTypeCaption h1{
+    margin-top: 50px;
+    font-size: 40px;
+    font-weight: 800;
+    color: #fff;
+}
+.RegisterationTypep{
+    color: rgb(153 153 153);;
+    margin-top: 50px;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    text-align: center;
+
+}
+.RegisterationTypeImage {
+  margin-top: 20px;
+ 
+}
+.RegisterationTypeImage img{
+    width: 310px;
+    height: 331px;
+    border-radius: 10px;
+}
+.collcetion{
+    margin: 20px;
+    position: relative;
+}
+.layer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Black, transparent background */
+    border-radius: 10px;
+    transition: 0.3s ease;
+    opacity: 0;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.collcetion:hover .layer{
+    opacity: 1;
+}
+.markTrue{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: white;
+    z-index: 9999;
+}
+.layermark{
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.checkmark-overlay img{
+    object-fit: fill;
+   width: 100%;
+}
+.title-overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+.mystepper .button2{
+    background-color: #fff !important;
+    color: #000;
+    padding: 15px 50px;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+}
+.mystepper .button1{
+    background-color: #000 !important;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 15px 50px;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+}
+.mystepper .button1:hover{
+    border: 1px solid #fff !important;
+    color: #fff;
+ 
+}
+
+/* steper */
+.mystepper .StepButton-d2-0-2-8.active {
+    background-color: rgb(229 152 25) !important;
+}
+.mystepper .Label-d3-0-2-15 {
+   color: rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d2-0-2-8.completed {
+    background-color: rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d6-0-2-18.active {
+    background-color: rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d6-0-2-18.completed {
+    background-color: rgb(229 152 25) !important;
+}
+.mystepper .Connector-d3-0-2-25 {
+    border-color: rgb(60 60 60) !important;
+}
+.mystepper .Connector-d7-0-2-37 {
+    border-color: rgb(60 60 60) !important;
+}
+.mystepper .Connector-d11-0-2-49{
+    border-color: rgb(60 60 60) !important;
+}
+.mystepper .Connector-d15-0-2-61{
+    border-color: rgb(60 60 60) !important;
+}
+.mystepper .Connector-d19-0-2-73{
+    border-color: rgb(60 60 60) !important;
+
+}
+.mystepper .StepButton-d10-0-2-32.active {
+    background-color:rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d10-0-2-32.completed {
+    background-color:rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d14-0-2-44.active {
+    background-color:rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d14-0-2-44.completed {
+    background-color:rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d18-0-2-56.active {
+    background-color:rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d18-0-2-56.completed {
+    background-color:rgb(229 152 25) !important;
+}
+.mystepper .StepButton-d22-0-2-68.active {
+    background-color:rgb(229 152 25) !important;
+}
+.Label-d11-0-2-41 {
+    color: rgb(229 152 25);
+}
+.Label-d15-0-2-53 {
+    color: rgb(229 152 25);
+}
+.mystepper .Label-d7-0-2-29 {
+    color: rgb(229 152 25);
+}
+.Label-d19-0-2-65 {
+    color: rgb(229 152 25);
+}
+.Label-d23-0-2-77 {
+    color: rgb(229 152 25);
+}
+
+/*RegistrationDropdowns*/
+
+.form-label{
+    color: rgb(229 152 25);
+    font-weight: bold;
+}
+.form-check-label{
+    color:#4F547B;
+}
+.form-check-label a{
+    color:#E59819 !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* OtpInput */
+
+.otp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .otp input {
+    width: 2.5rem !important;
+    height: 3rem;
+    margin: 0 0.5rem;
+    font-size: 1.5rem;
+    border-radius: 4px;
+    border: 1px solid #999999;
+    text-align: center;
+    outline: none;
+  }
+  
+  .otp input:focus {
+    border-color: #0056b3; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  }
+  
+  /* .otp span {
+    font-size: 1.5rem;
+    color: #007bff;
+  } */
+  
+.finishCaption{
+    color: rgb(153 153 153);;
+    margin-top: 15px;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

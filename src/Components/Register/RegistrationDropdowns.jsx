@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../../Context/UserContext';
+import { ColorRing } from 'react-loader-spinner'
+import toast from 'react-hot-toast';
 
 
 
@@ -12,19 +14,25 @@ let {specialities}=useContext(UserContext)
 ///////////
 let {register,handleSubmit,formState:{errors}}=useForm();
 const [error, setError] = useState()
-  const onSubmit=async (data)=>{
+const [loading, setLoading]=useState(false)
 
+  const onSubmit=async (data)=>{
+    setLoading(true)
     try {
-      // let response = await axios.post("https://uat-icons.com/Quote2supply/api/register", data)
-      // localStorage.setItem('materialsToken', response.data.data.token);
-      // console.log(response);
-      // console.log(response?.data.data.token);
+      let response = await axios.post("https://uat-icons.com/Quote2supply/api/register", data)
+      localStorage.setItem('materialsToken', response.data.data.token);
+      setLoading(false)
+      toast.success(response?.data?.meta.message);
+      console.log(response);
+      console.log(response?.data.data.token);
+      // alert(response?.data?.meta.message) 
       //  setError(response?.data)
       setActiveStep(2)
     }
-    catch (error) {
-        // setError(error?.response?.data?.meta?.errors)
-      
+    catch (errors) {
+        setError(errors?.response?.data?.meta?.errors)
+        setLoading(false)
+        toast.error(errors?.response?.data?.meta?.message)
     }
     
 }
@@ -36,7 +44,7 @@ console.log(Countries);
 const getCountries= async ()=>{
   try{
       let response=await axios.get(`https://uat-icons.com/Quote2supply/api/countries`)
-      setCountries(response.data.data);                  
+      setCountries(response.data.data);              
   }catch(error){
       console.log(error);
   }
@@ -72,7 +80,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                                 // }
                               })}
                          />
-                        {error?.full_name && <p className='alert alert-danger mt-2'>{error?.full_name}</p>}
+                        {error?.full_name && <p className='alert text-danger'>{error?.full_name}</p>}
                     </div>
 
                     <div className="mb-3 w-50 p-3">
@@ -86,7 +94,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                             // }
                           })}
                         />
-                        {error?.email && <p className='alert alert-danger mt-2'>{error?.email}</p>}
+                        {error?.email && <p className='alert  text-danger p-0 m-0'>{error?.email}</p>}
                     </div>
                 </div>
 
@@ -109,8 +117,8 @@ const [selectedCountry, setSelectedCountry] = useState('');
                                 // }
                               })}
                             />
-                            {error?.phone && <p className='alert alert-danger mt-2'>{error?.phone}</p>}
                         </div>
+                        {error?.phone && <p className='alert  text-danger p-0 m-0'>{error?.phone}</p>}
                     </div>
                     
                     <div className="mb-3 w-50 p-3">
@@ -133,7 +141,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                           </option>
                         ))}
                       </select>
-                      {error?.speciality_id && <p className='alert alert-danger mt-2'>{error?.speciality_id}</p>}
+                      {error?.speciality_id && <p className='alert  text-danger p-0 m-0'>{error?.speciality_id}</p>}
                     </div>
                 </div>
 
@@ -151,7 +159,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                             // }
                           })}
                         />
-                        {error?.password && <p className='alert alert-danger mt-2'>{error?.password}</p>}
+                        {error?.password && <p className='alert  text-danger p-0 m-0'>{error?.password}</p>}
                     </div>
                     
 
@@ -166,7 +174,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                             // }
                           })}
                         />
-                        {error?.password_confirmation && <p className='alert alert-danger mt-2'>{error?.password_confirmation}</p>}
+                        {error?.password_confirmation && <p className='alert  text-danger p-0 m-0'>{error?.password_confirmation}</p>}
                     </div>
                     
                 </div>
@@ -195,7 +203,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                         </option>
                       ))}
                     </select>
-                    {error?.country_id && <p className='alert alert-danger mt-2'>{error?.country_id}</p>}
+                    {error?.country_id && <p className='alert  text-danger p-0 m-0'>{error?.country_id}</p>}
                   </div>
                   
                   <div className="mb-3 w-50 p-3">
@@ -281,6 +289,21 @@ const [selectedCountry, setSelectedCountry] = useState('');
                       <label className="form-check-label  ms-2" htmlFor="exampleCheck1">I agree to the <a>terms</a> of services and <a>privacy policy</a> </label>
                 </div>
               </form>
+
+              {loading== true? 
+              <div className='m-auto text-center loading'>
+                <ColorRing
+                className="text-center m-auto"
+                visible={true}
+                height="100"
+                width="180"
+                ariaLabel="color-ring-loading"
+                wrapperStyle={{}}
+                wrapperClass="color-ring-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                />
+              </div>
+              : ''}
     </div>
     
     </>

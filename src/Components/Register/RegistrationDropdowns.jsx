@@ -25,8 +25,7 @@ const [loading, setLoading]=useState(false)
       toast.success(response?.data?.meta.message);
       console.log(response);
       console.log(response?.data.data.token);
-      // alert(response?.data?.meta.message) 
-      //  setError(response?.data)
+       setError(response?.data)
       setActiveStep(2)
     }
     catch (errors) {
@@ -34,7 +33,6 @@ const [loading, setLoading]=useState(false)
         setLoading(false)
         toast.error(errors?.response?.data?.meta?.message)
     }
-    
 }
 
 /////////
@@ -145,8 +143,6 @@ const [selectedCountry, setSelectedCountry] = useState('');
                     </div>
                 </div>
 
-
-
                 <div className='d-flex align-items-center justify-content-between'>
                     <div className="mb-3 w-50 p-3">
                         <label htmlFor="exampleInputPassword" className="form-label">Password *</label>
@@ -162,7 +158,6 @@ const [selectedCountry, setSelectedCountry] = useState('');
                         {error?.password && <p className='alert  text-danger p-0 m-0'>{error?.password}</p>}
                     </div>
                     
-
                     <div className="mb-3 w-50 p-3">
                         <label htmlFor="exampleInputConfirmPassword" className="form-label">Confirm Password *</label>
                         <input required type="password" placeholder='*****' className="form-control py-3" id="exampleInputConfirmPassword"
@@ -176,7 +171,6 @@ const [selectedCountry, setSelectedCountry] = useState('');
                         />
                         {error?.password_confirmation && <p className='alert  text-danger p-0 m-0'>{error?.password_confirmation}</p>}
                     </div>
-                    
                 </div>
 
                     {/* Country and city  */}
@@ -281,9 +275,6 @@ const [selectedCountry, setSelectedCountry] = useState('');
 
                 {/* end */}
 
-         
-
-            
                 <div className="mb-3 form-check d-flex align-items-center justify-content-center">
                       <input required type="checkbox" className="form-check-input" id="exampleCheck1" />
                       <label className="form-check-label  ms-2" htmlFor="exampleCheck1">I agree to the <a>terms</a> of services and <a>privacy policy</a> </label>

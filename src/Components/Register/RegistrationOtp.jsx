@@ -20,7 +20,6 @@ export default function RegistrationOtp({formRef,setActiveStep}) {
       setLoading(false)
       console.log(response);
       toast.success(response?.data?.meta?.message);
-      // alert(response.data?.meta?.message)
       setActiveStep(3) 
     }
     catch (errors) {
@@ -50,7 +49,6 @@ export default function RegistrationOtp({formRef,setActiveStep}) {
           />
 
         </div>
-            {/* {errors?.otp && <p className='w-50 m-auto text-center alert text-danger mt-2'>{errors.response.data.meta.message}</p>} */}
             {error && <p className='w-50 m-auto text-center alert text-danger mt-2'>{error}</p>}
 
       </form>

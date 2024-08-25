@@ -7,6 +7,8 @@ import RegistrationOtp from '../Register/RegistrationOtp';
 import RegisterationCompanyInfo from '../Register/RegisterationCompanyInfo';
 import Finish from '../Register/Finish';
 import BusinessInfo from '../Register/BusinessInfo';
+import axiosInstance from '../../hooks/axiosInstance';
+import CompanyProfile from '../CompanyProfile/CompanyProfile';
 
 
 
@@ -18,6 +20,10 @@ export default function MyStepper() {
     const [isNextButtonVisible, setIsNextButtonVisible] = useState(false);
     const [activeTab, setActiveTab] = useState('home');
     const [isCompanySelected, setIsCompanySelected] = useState(false);
+    const [selectedCompanyId, setSelectedCompanyId] = useState(''); //  company_id 
+    const [selectedCompanyProfile, setSelectedCompanyProfile] = useState(''); 
+
+console.log(selectedCompanyId);
 
     //  مرجع علشان امسك الفورم 
     const formRef = useRef(null);
@@ -52,8 +58,10 @@ export default function MyStepper() {
       if (isCompanySelected) {
         try {
           // Call API to join the selected company
-          // await axiosInstance.post('/join-company', { companyName: selectedCompany });
+          let response= await axiosInstance.post('/join-company', { company_id: selectedCompanyId });
+          setSelectedCompanyProfile(response.data.data);
           alert('Successfully joined the company!');
+          <CompanyProfile pofileData={selectedCompanyProfile}  />
           // setActiveStep(prevStep => prevStep + 1); // Move to the next step after successful API call
         } catch (error) {
           console.error('Error joining company:', error);
@@ -123,6 +131,9 @@ export default function MyStepper() {
     const handleCompanySelected = (isSelected) => {
       setIsCompanySelected(isSelected);
     };
+    const handleCompanyIdSelected = (id) => {
+      setSelectedCompanyId(id);
+    };
     // get id url path
     useEffect(() => {
       const hash = window.location.hash.substring(1);
@@ -154,7 +165,7 @@ export default function MyStepper() {
           <RegistrationOtp formRef={formRef} setActiveStep={setActiveStep} />
           </div>}
           {activeStep === 3 && <div>
-          <RegisterationCompanyInfo formRef={formRef} setActiveStep={setActiveStep} onCompanySelected={handleCompanySelected}  />
+          <RegisterationCompanyInfo formRef={formRef} setActiveStep={setActiveStep} onCompanySelected={handleCompanySelected} onCompanyIdSelected={handleCompanyIdSelected}  />
           </div>}
           {activeStep === 4 && <div>
             <BusinessInfo activeTab={activeTab}  />

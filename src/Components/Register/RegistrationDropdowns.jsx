@@ -52,9 +52,11 @@ useEffect(()=>{
   getCountries()
 },[])
 /////////////////////
+let{setCountriesUseInInfo}=useContext(UserContext)
 const [selectedCountry, setSelectedCountry] = useState('');
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);
+    setCountriesUseInInfo(event.target.value)
   };
 
   console.log("selectCountry",selectedCountry);

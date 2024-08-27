@@ -71,15 +71,25 @@ console.log(selectedCompanyId);
           formRef.current.requestSubmit(); // Proceed with the registration of a new company
         }
       }
-    } else if (activeStep === 4) {
+    }  else if (activeStep === 4) {
+      if (formRef.current) {
+        if (!formRef.current.checkValidity()) {
+          formRef.current.reportValidity();
+          return;
+        }
+      }
+  
       switch (activeTab) {
         case 'home':
-          setActiveTab('profile');
+          formRef.current.requestSubmit();
+          // setActiveTab('profile');
           break;
         case 'profile':
-          setActiveTab('contact');
+          formRef.current.requestSubmit();
+          // setActiveTab('contact');
           break;
         case 'contact':
+          // Move to the next step after validation
           setActiveStep(prevStep => prevStep + 1);
           break;
         default:
@@ -168,7 +178,7 @@ console.log(selectedCompanyId);
           <RegisterationCompanyInfo formRef={formRef} setActiveStep={setActiveStep} onCompanySelected={handleCompanySelected} onCompanyIdSelected={handleCompanyIdSelected}  />
           </div>}
           {activeStep === 4 && <div>
-            <BusinessInfo activeTab={activeTab}  />
+            <BusinessInfo formRef={formRef} setActiveTab={setActiveTab} activeTab={activeTab}  />
           </div>}
           {activeStep === 5 && <div>
           <Finish/>

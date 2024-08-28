@@ -8,7 +8,8 @@ import RegisterationCompanyInfo from '../Register/RegisterationCompanyInfo';
 import Finish from '../Register/Finish';
 import BusinessInfo from '../Register/BusinessInfo';
 import axiosInstance from '../../hooks/axiosInstance';
-import CompanyProfile from '../CompanyProfile/CompanyProfile';
+import toast from 'react-hot-toast';
+import StepTwoBusiness from '../Register/StepTwoBusiness';
 
 
 
@@ -21,12 +22,14 @@ export default function MyStepper() {
     const [activeTab, setActiveTab] = useState('home');
     const [isCompanySelected, setIsCompanySelected] = useState(false);
     const [selectedCompanyId, setSelectedCompanyId] = useState(''); //  company_id 
-    const [selectedCompanyProfile, setSelectedCompanyProfile] = useState(''); 
 
 console.log(selectedCompanyId);
 
     //  مرجع علشان امسك الفورم 
     const formRef = useRef(null);
+    const formRef2 = useRef(null);
+    const formRef3 = useRef(null);
+
 
   //   const handleNext = () => {
   //     if (activeStep === 4) {
@@ -57,14 +60,11 @@ console.log(selectedCompanyId);
     if (activeStep === 3) {
       if (isCompanySelected) {
         try {
-          // Call API to join the selected company
           let response= await axiosInstance.post('/join-company', { company_id: selectedCompanyId });
-          setSelectedCompanyProfile(response.data.data);
-          alert('Successfully joined the company!');
-          <CompanyProfile pofileData={selectedCompanyProfile}  />
-          // setActiveStep(prevStep => prevStep + 1); // Move to the next step after successful API call
+          toast.success(response.data.meta.message);
+          setActiveStep(5); 
         } catch (error) {
-          console.error('Error joining company:', error);
+          toast.error(error?.response?.data?.meta?.message)
         }
       } else {
         if (formRef.current) {
@@ -77,6 +77,16 @@ console.log(selectedCompanyId);
           formRef.current.reportValidity();
           return;
         }
+      }else if (formRef2.current){
+        if (!formRef2.current.checkValidity()) {
+          formRef2.current.reportValidity();
+          return;
+        }
+      }else if (formRef3.current){
+        if (!formRef3.current.checkValidity()) {
+          formRef3.current.reportValidity();
+          return;
+        }
       }
   
       switch (activeTab) {
@@ -85,7 +95,7 @@ console.log(selectedCompanyId);
           // setActiveTab('profile');
           break;
         case 'profile':
-          formRef.current.requestSubmit();
+          formRef2.current.requestSubmit();
           // setActiveTab('contact');
           break;
         case 'contact':
@@ -178,7 +188,7 @@ console.log(selectedCompanyId);
           <RegisterationCompanyInfo formRef={formRef} setActiveStep={setActiveStep} onCompanySelected={handleCompanySelected} onCompanyIdSelected={handleCompanyIdSelected}  />
           </div>}
           {activeStep === 4 && <div>
-            <BusinessInfo formRef={formRef} setActiveTab={setActiveTab} activeTab={activeTab}  />
+            <BusinessInfo formRef3={formRef3} formRef={formRef} formRef2={formRef2} setActiveTab={setActiveTab} activeTab={activeTab}  />
           </div>}
           {activeStep === 5 && <div>
           <Finish/>

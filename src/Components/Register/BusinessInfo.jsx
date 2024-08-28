@@ -2,43 +2,125 @@ import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast';
 import { UserContext } from '../../Context/UserContext';
 import { useForm } from 'react-hook-form';
+import axiosInstance from '../../hooks/axiosInstance';
+import { ColorRing } from 'react-loader-spinner';
 
 
 
-export default function BusinessInfo({formRef,activeTab, onTabChange,setActiveTab }) {
+export default function BusinessInfo({formRef,formRef2,formRef3,activeTab, onTabChange,setActiveTab }) {
 
-  let {register,handleSubmit,formState:{errors}}=useForm();
+let {register,handleSubmit,formState:{errors}}=useForm();
 const [error, setError] = useState()
 const [loading, setLoading]=useState(false)
 
+
 let{registrationDropdowns}=useContext(UserContext)
-console.log(registrationDropdowns.data.data[2]);
+// console.log(registrationDropdowns.data.data[2]);
+
   const onSubmit=async (data)=>{
-    console.log(data);
-    setActiveTab('profile')
-    // setLoading(true)
+
+    const dataWithStep = {
+            data,
+            step: '4'
+          };
+    console.log(dataWithStep);
+    setLoading(true)
     try {
-      // let response = await axios.post("https://uat-icons.com/Quote2supply/api/register", data)
-      // localStorage.setItem('materialsToken', response.data.data.token);
-      // setLoading(false)
-      // toast.success(response?.data?.meta.message);
-      // console.log(response);
-      // console.log(response?.data.data.token);
+       let response = await axiosInstance.post("compelete-business-info", dataWithStep)
+      setLoading(false)
+      toast.success(response?.data?.meta.message);
+       console.log(response);
       //  setError(response?.data)
-      // setActiveTab('profile')
+      setActiveTab('profile')
     }
     catch (errors) {
+      console.log(errors);
+
         // setError(errors?.response?.data?.meta?.errors)
-        // setLoading(false)
+        setLoading(false)
         // toast.error(errors?.response?.data?.meta?.message)
     }
 }
-//////////////////////////////////////////////////////////////////
+
+const onSubmitStep2=async (data2)=>{
+  const dataWithStep = {
+    data2,
+    step: '4'
+  };
+console.log(dataWithStep);
+console.log("ahmed");
+setLoading(true)
+try {
+let response = await axiosInstance.post("compelete-business-info", dataWithStep)
+setLoading(false)
+toast.success(response?.data?.meta.message);
+console.log(response);
+//  setError(response?.data)
+setActiveTab('contact')
+}
+catch (errors) {
+console.log(errors);
+
+// setError(errors?.response?.data?.meta?.errors)
+setLoading(false)
+// toast.error(errors?.response?.data?.meta?.message)
+}
+}
+
+const onSubmitStep3=async (data3)=>{
+  const dataWithStep = {
+    data3,
+    step: '4'
+  };
+console.log(dataWithStep);
+console.log("ahmed");
+setLoading(true)
+try {
+let response = await axiosInstance.post("compelete-business-info", dataWithStep)
+setLoading(false)
+toast.success(response?.data?.meta.message);
+console.log(response);
+//  setError(response?.data)
+}
+catch (errors) {
+console.log(errors);
+
+// setError(errors?.response?.data?.meta?.errors)
+setLoading(false)
+// toast.error(errors?.response?.data?.meta?.message)
+}
+}
+
+
+const [selectedItems, setSelectedItems] = useState([]);
+const [isSelectAll, setIsSelectAll] = useState(false);
+
+  const handleCheckboxChange = (e, item) => {
+    const { checked} = e.target;
+    
+
+    if (checked) {
+      setSelectedItems((prev) => [...prev, item.title]);
+    } else {
+      setSelectedItems((prev) => prev.filter((title) => title !== item.title));
+    }
+  };
+
+
+  const handleSelectAllChange = () => {
+    const allItems = registrationDropdowns.data.data[2].options;
+    if (isSelectAll) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(allItems.map((item) => item.title));
+    }
+    setIsSelectAll(!isSelectAll);
+  };
 
 
   return (
     <>
-     <div>
+     <div className='pb-5'>
       <div className="tab-content" id="myTabContent">
         <div className={`tab-pane fade ${activeTab === 'home' ? 'show active' : ''}`} id="home" role="tabpanel" aria-labelledby="home-tab">
           <p className='RegisterationTypep'>Your business, tell us more about you business</p>
@@ -59,9 +141,10 @@ console.log(registrationDropdowns.data.data[2]);
                   <option key={index} value={item.id}>{item.title}</option>
                 ))}
               </select>
+              {errors.classification_ids && <div className="text-danger">{errors.classification_ids.message}</div>}
             </div>
 
-                <div className="mb-3 w-50 p-3">
+                {/* <div className="mb-3 w-50 p-3">
                   <label htmlFor="approvedBy" className="form-label">Approved by</label>
                   <div className="dropdown">
                     <button
@@ -81,7 +164,7 @@ console.log(registrationDropdowns.data.data[2]);
                               type="checkbox"
                               id={`approvedBy_${item.id}`}
                               value={item.id}
-                              {...register("approved_by_ids")}
+                              {...register("approved_by_ids",{ required: "Classification is required" })}
                               className="form-check-input"
                             />
                             <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
@@ -92,6 +175,91 @@ console.log(registrationDropdowns.data.data[2]);
                       ))}
                     </ul>
                   </div>
+                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
+                </div> */}
+
+                {/* <div className="mb-3 w-50 p-3">
+                  <label htmlFor="approvedBy" className="form-label">Approved by</label>
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-light border form-select py-3 w-100 text-start"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {selectedItems.length > 0 ? selectedItems.join(', ') : 'Select'}
+                    </button>
+                    <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                      {registrationDropdowns.data.data[2].options.map((item, index) => (
+                        <li key={index} className="dropdown-item">
+                          <div className="form-check">
+                            <input
+                              type="checkbox"
+                              id={`approvedBy_${item.id}`}
+                              value={item.id}
+                              {...register("approved_by_ids", { required: "Classification is required" })}
+                              className="form-check-input"
+                              onChange={(e) => handleCheckboxChange(e, item)}
+                            />
+                            <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
+                              {item.title}
+                            </label>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
+                </div> */}
+                <div className="mb-3 w-50 p-3">
+                  <label htmlFor="approvedBy" className="form-label">Approved by</label>
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-light border form-select py-3 w-100 text-start"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {selectedItems.length > 0 ? selectedItems.join(', ') : 'Select'}
+                    </button>
+                    <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                      <li className="dropdown-item">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            id="selectAll"
+                            checked={isSelectAll}
+                            className="form-check-input"
+                            onChange={handleSelectAllChange}
+                          />
+                          <label htmlFor="selectAll" className="form-check-label">
+                            Select All
+                          </label>
+                        </div>
+                      </li>
+                      {registrationDropdowns.data.data[2].options.map((item, index) => (
+                        <li key={index} className="dropdown-item">
+                          <div className="form-check">
+                            <input
+                              type="checkbox"
+                              id={`approvedBy_${item.id}`}
+                              value={item.id}
+                              checked={selectedItems.includes(item.title)}
+                              {...register("approved_by_ids", { required: "Classification is required" })}
+                              className="form-check-input"
+                              onChange={(e) => handleCheckboxChange(e, item)}
+                            />
+                            <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
+                              {item.title}
+                            </label>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
                 </div>
           </div>
 
@@ -116,7 +284,7 @@ console.log(registrationDropdowns.data.data[2]);
                               type="checkbox"
                               id={`segment_${item.id}`}
                               value={item.id}
-                              {...register("segment_ids")}
+                              {...register("segment_ids", { required: "segment is required" })}
                               className="form-check-input"
                             />
                             <label htmlFor={`segment_${item.id}`} className="form-check-label">
@@ -127,7 +295,43 @@ console.log(registrationDropdowns.data.data[2]);
                       ))}
                     </ul>
                   </div>
+                  {errors.segment_ids && <div className="text-danger">{errors.segment_ids.message}</div>}
                 </div>
+
+                     {/* <div className="mb-3 w-50 p-3">
+                  <label htmlFor="approvedBy" className="form-label">Approved by</label>
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-light border form-select py-3 w-100 text-start"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {selectedItems.length > 0 ? selectedItems.join(', ') : 'Select'}
+                    </button>
+                    <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                      {registrationDropdowns.data.data[2].options.map((item, index) => (
+                        <li key={index} className="dropdown-item">
+                          <div className="form-check">
+                            <input
+                              type="checkbox"
+                              id={`approvedBy_${item.id}`}
+                              value={item.id}
+                              {...register("approved_by_ids", { required: "Classification is required" })}
+                              className="form-check-input"
+                              onChange={(e) => handleCheckboxChange(e, item)}
+                            />
+                            <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
+                              {item.title}
+                            </label>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
+                </div> */}
 
                 <div className="mb-3 w-50 p-3">
                   <label htmlFor="targetProjectSize" className="form-label">Target project size you can do</label>
@@ -149,7 +353,7 @@ console.log(registrationDropdowns.data.data[2]);
                               type="checkbox"
                               id={`targetProjectSize_${item.id}`}
                               value={item.id}
-                              {...register("target_ids")}
+                              {...register("target_ids",{ required: "target is required" })}
                               className="form-check-input"
                             />
                             <label htmlFor={`targetProjectSize_${item.id}`} className="form-check-label">
@@ -160,26 +364,98 @@ console.log(registrationDropdowns.data.data[2]);
                       ))}
                     </ul>
                   </div>
+                  {errors.target_ids && <div className="text-danger">{errors.target_ids.message}</div>}
+
                 </div>
-
-
           </div>
-
           </form>
-        </div>
 
-        <div className={`tab-pane fade ${activeTab === 'profile' ? 'show active' : ''}`} id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          Step 2
+          {loading== true? 
+              <div className='m-auto text-center loading'>
+                <ColorRing
+                className="text-center m-auto"
+                visible={true}
+                height="100"
+                width="180"
+                ariaLabel="color-ring-loading"
+                wrapperStyle={{}}
+                wrapperClass="color-ring-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                />
+              </div>
+              : ''}
+
         </div>
+{/* //////////////////////////// */}
+      <div className={`tab-pane fade ${activeTab === 'profile' ? 'show active' : ''}`} id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <p className='RegisterationTypep'>Your business, tell us more about you business</p>
+        <form ref={formRef2} onSubmit={handleSubmit(onSubmitStep2)}  className='w-75 m-auto'>
+          <div className='d-flex align-items-center justify-content-between'>
+          <div className="mb-3 w-50 p-3">
+              <label htmlFor="exampleSelect10" className="form-label">Your Role in The Company</label>
+              <select
+              required
+                id="exampleSelect10"
+                className="form-select py-3"
+                {...register("role_in_company_id")}
+                defaultValue=""
+              >
+                <option value="" disabled>Select</option>
+                {registrationDropdowns.data.data[5].options.map((item, index) => (
+                  <option key={index} value={item.id}>{item.title}</option>
+                ))}
+              </select>
+              {errors.role_in_company_id && <div className="text-danger">{errors.role_in_company_id.message}</div>}
+            </div>
+            {/*  */}
+            <div className="mb-3 w-50 p-3">
+              <label htmlFor="exampleSelect11" className="form-label">Are you Auth to Issue PO</label>
+              <select
+              required
+                id="exampleSelect11"
+                className="form-select py-3"
+                {...register("issue_to_po")}
+                defaultValue=""
+              >
+                <option value="" disabled>Select</option>
+                {registrationDropdowns.data.data[6].options.map((item, index) => (
+                  <option key={index} value={item.id}>{item.title}</option>
+                ))}
+              </select>
+              {errors.issue_to_po && <div className="text-danger">{errors.issue_to_po.message}</div>}
+
+            </div>
+          </div>
+          </form>
+      </div>
+
+{/* /////////////////////////////////////// */}
         <div className={`tab-pane fade ${activeTab === 'contact' ? 'show active' : ''}`} id="contact" role="tabpanel" aria-labelledby="contact-tab">
-          Step 3
+        <p className='RegisterationTypep'>Your business, tell us more about you business</p>
+          
+          <form ref={formRef3} onSubmit={handleSubmit(onSubmitStep3)}  className='w-75 m-auto'>
+          <div className='d-flex align-items-center justify-content-between'>
+          <div className="mb-3 w-50 p-3">
+              <label htmlFor="exampleSelect" className="form-label">Classification</label>
+              <select
+                required
+                id="exampleSelect"
+                className="form-select py-3"
+                {...register("classification_idsss")}
+                defaultValue=""
+              >
+                <option value="" disabled>Select</option>
+                {registrationDropdowns.data.data[1].options.map((item, index) => (
+                  <option key={index} value={item.id}>{item.title}</option>
+                ))}
+              </select>
+              {errors.classification_ids && <div className="text-danger">{errors.classification_ids.message}</div>}
+            </div>
+          </div>
+          </form>
         </div>
       </div>
     </div>
-
-      
-    
-    
     </>
   )
 }

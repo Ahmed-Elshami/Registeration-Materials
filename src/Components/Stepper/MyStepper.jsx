@@ -9,7 +9,6 @@ import Finish from '../Register/Finish';
 import BusinessInfo from '../Register/BusinessInfo';
 import axiosInstance from '../../hooks/axiosInstance';
 import toast from 'react-hot-toast';
-import StepTwoBusiness from '../Register/StepTwoBusiness';
 
 
 

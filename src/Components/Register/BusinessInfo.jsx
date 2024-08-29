@@ -105,6 +105,9 @@ toast.error(errors?.response?.data?.meta?.message)
 
 const [selectedItems, setSelectedItems] = useState([]);
 const [isSelectAll, setIsSelectAll] = useState(false);
+const [selectedItems2, setSelectedItems2] = useState([]);
+const [selectedItems3, setSelectedItems3] = useState([]);
+
 
   const handleCheckboxChange = (e, item) => {
     const { checked} = e.target;
@@ -114,6 +117,28 @@ const [isSelectAll, setIsSelectAll] = useState(false);
       setSelectedItems((prev) => [...prev, item.title]);
     } else {
       setSelectedItems((prev) => prev.filter((title) => title !== item.title));
+    }
+  };
+
+  const handleCheckboxChange2 = (e, item) => {
+    const { checked} = e.target;
+    
+
+    if (checked) {
+      setSelectedItems2((prev) => [...prev, item.title]);
+    } else {
+      setSelectedItems2((prev) => prev.filter((title) => title !== item.title));
+    }
+  };
+
+  const handleCheckboxChange3 = (e, item) => {
+    const { checked} = e.target;
+    
+
+    if (checked) {
+      setSelectedItems3((prev) => [...prev, item.title]);
+    } else {
+      setSelectedItems3((prev) => prev.filter((title) => title !== item.title));
     }
   };
 
@@ -285,7 +310,7 @@ const [isSelectAll, setIsSelectAll] = useState(false);
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      Select
+                       {selectedItems2.length > 0 ? selectedItems2.join(', ') : 'Select'}
                     </button>
                     <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
                       {registrationDropdowns.data.data[3].options.map((item, index) => (
@@ -297,6 +322,7 @@ const [isSelectAll, setIsSelectAll] = useState(false);
                               value={item.id}
                               {...register("segment_ids", { required: "segment is required" })}
                               className="form-check-input"
+                              onChange={(e) => handleCheckboxChange2(e, item)}
                             />
                             <label htmlFor={`segment_${item.id}`} className="form-check-label">
                               {item.title}
@@ -354,8 +380,8 @@ const [isSelectAll, setIsSelectAll] = useState(false);
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      Select
-                    </button>
+                       {selectedItems3.length > 0 ? selectedItems3.join(', ') : 'Select'}
+                       </button>
                     <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
                       {registrationDropdowns.data.data[4].options.map((item, index) => (
                         <li key={index} className="dropdown-item">
@@ -366,6 +392,7 @@ const [isSelectAll, setIsSelectAll] = useState(false);
                               value={item.id}
                               {...register("target_ids",{ required: "target is required" })}
                               className="form-check-input"
+                              onChange={(e) => handleCheckboxChange3(e, item)}
                             />
                             <label htmlFor={`targetProjectSize_${item.id}`} className="form-check-label">
                               {item.title}
@@ -449,7 +476,7 @@ const [isSelectAll, setIsSelectAll] = useState(false);
                 ariaLabel="color-ring-loading"
                 wrapperStyle={{}}
                 wrapperClass="color-ring-wrapper"
-                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                colors={['#FFFF00', '#FFD700', '#F7E300', '#F5F5DC', '#FFEB3B']}
                 />
               </div>
               : ''}
@@ -502,7 +529,7 @@ const [isSelectAll, setIsSelectAll] = useState(false);
           </form>
           {loading== true? 
               <div className='m-auto text-center loading'>
-                <Circles
+                <Discuss
                 className="text-center m-auto"
                 visible={true}
                 height="100"
@@ -510,7 +537,7 @@ const [isSelectAll, setIsSelectAll] = useState(false);
                 ariaLabel="color-ring-loading"
                 wrapperStyle={{}}
                 wrapperClass="color-ring-wrapper"
-                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                colors={['#FFFF00', '#FFD700', '#F7E300', '#F5F5DC', '#FFEB3B']}
                 />
               </div>
               : ''}

@@ -100,7 +100,8 @@ console.log(selectedCompanyId);
           break;
         case 'contact':
           // Move to the next step after validation
-          setActiveStep(prevStep => prevStep + 1);
+          formRef3.current.requestSubmit();
+          // setActiveStep(prevStep => prevStep + 1);
           break;
         default:
           break;
@@ -188,7 +189,7 @@ console.log(selectedCompanyId);
           <RegisterationCompanyInfo formRef={formRef} setActiveStep={setActiveStep} onCompanySelected={handleCompanySelected} onCompanyIdSelected={handleCompanyIdSelected}  />
           </div>}
           {activeStep === 4 && <div>
-            <BusinessInfo formRef3={formRef3} formRef={formRef} formRef2={formRef2} setActiveTab={setActiveTab} activeTab={activeTab}  />
+            <BusinessInfo formRef3={formRef3} formRef={formRef} formRef2={formRef2} setActiveStep={setActiveStep} setActiveTab={setActiveTab} activeTab={activeTab}  />
           </div>}
           {activeStep === 5 && <div>
           <Finish/>

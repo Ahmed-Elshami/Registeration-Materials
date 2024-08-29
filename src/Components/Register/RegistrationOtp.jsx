@@ -28,7 +28,19 @@ export default function RegistrationOtp({formRef,setActiveStep}) {
         toast.error(errors?.response?.data?.meta?.message)
     }
 }
-
+/////////////////////////////////////////////////////
+const returnOTP = async () => {
+  setLoading(true)
+  try {
+    const response = await axiosInstance.post("resend-otp");
+    setLoading(false)
+    console.log(response);
+    toast.success(response?.data?.meta?.message);
+  } catch (error) {
+    setLoading(false)
+    toast.error(errors?.response?.data?.meta?.message)
+  }
+};
 
   return (
     <>
@@ -50,6 +62,8 @@ export default function RegistrationOtp({formRef,setActiveStep}) {
 
         </div>
             {error && <p className='w-50 m-auto text-center alert text-danger mt-2'>{error}</p>}
+
+            <p className='text-center mt-4 resrndp'>if you didn't receive OTP Number Please click <a className='resend' onClick={returnOTP}>Resend</a>  </p>
 
       </form>
           {loading== true? 

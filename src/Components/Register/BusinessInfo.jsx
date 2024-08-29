@@ -3,11 +3,10 @@ import toast from 'react-hot-toast';
 import { UserContext } from '../../Context/UserContext';
 import { useForm } from 'react-hook-form';
 import axiosInstance from '../../hooks/axiosInstance';
-import { ColorRing } from 'react-loader-spinner';
+import { Circles, ColorRing, Discuss } from 'react-loader-spinner';
 
 
-
-export default function BusinessInfo({formRef,formRef2,formRef3,activeTab, onTabChange,setActiveTab }) {
+export default function BusinessInfo({formRef,formRef2,formRef3,activeTab,setActiveStep, onTabChange,setActiveTab }) {
 
 let {register,handleSubmit,formState:{errors}}=useForm();
 const [error, setError] = useState()
@@ -20,8 +19,8 @@ let{registrationDropdowns}=useContext(UserContext)
   const onSubmit=async (data)=>{
 
     const dataWithStep = {
-            data,
-            step: '4'
+            ...data,
+            step: '2'
           };
     console.log(dataWithStep);
     setLoading(true)
@@ -44,8 +43,8 @@ let{registrationDropdowns}=useContext(UserContext)
 
 const onSubmitStep2=async (data2)=>{
   const dataWithStep = {
-    data2,
-    step: '4'
+    ...data2,
+    step: '3'
   };
 console.log(dataWithStep);
 console.log("ahmed");
@@ -68,18 +67,30 @@ setLoading(false)
 }
 
 const onSubmitStep3=async (data3)=>{
-  const dataWithStep = {
-    data3,
-    step: '4'
-  };
-console.log(dataWithStep);
-console.log("ahmed");
+  const formData = new FormData();
+
+  formData.append('step', '4');
+  formData.append('short_brief', data3.short_brief);
+
+  if (data3.logo && data3.logo[0]) {
+    formData.append('logo', data3.logo[0]);
+  }
+
+  if (data3.cr_sce_id && data3.cr_sce_id[0]) {
+    formData.append('cr_sce_id', data3.cr_sce_id[0]);
+  }
+
 setLoading(true)
 try {
-let response = await axiosInstance.post("compelete-business-info", dataWithStep)
+let response = await axiosInstance.post("compelete-business-info", formData,{
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+})
 setLoading(false)
 toast.success(response?.data?.meta.message);
 console.log(response);
+setActiveStep(prevStep => prevStep + 1)
 //  setError(response?.data)
 }
 catch (errors) {
@@ -87,7 +98,7 @@ console.log(errors);
 
 // setError(errors?.response?.data?.meta?.errors)
 setLoading(false)
-// toast.error(errors?.response?.data?.meta?.message)
+toast.error(errors?.response?.data?.meta?.message)
 }
 }
 
@@ -408,25 +419,40 @@ const [isSelectAll, setIsSelectAll] = useState(false);
               {errors.role_in_company_id && <div className="text-danger">{errors.role_in_company_id.message}</div>}
             </div>
             {/*  */}
-            <div className="mb-3 w-50 p-3">
-              <label htmlFor="exampleSelect11" className="form-label">Are you Auth to Issue PO</label>
-              <select
-              required
-                id="exampleSelect11"
-                className="form-select py-3"
-                {...register("issue_to_po")}
-                defaultValue=""
-              >
-                <option value="" disabled>Select</option>
-                {registrationDropdowns.data.data[6].options.map((item, index) => (
-                  <option key={index} value={item.id}>{item.title}</option>
-                ))}
-              </select>
-              {errors.issue_to_po && <div className="text-danger">{errors.issue_to_po.message}</div>}
-
-            </div>
+                <div className="mb-3 w-50 p-3">
+                  <label htmlFor="exampleSelect11" className="form-label">
+                    Are you Auth to Issue PO
+                  </label>
+                  <select
+                    required
+                    id="exampleSelect11"
+                    className="form-select py-3"
+                    {...register("issue_to_po", {
+                      setValueAs: value => (value === "true" ? 1 : 0),
+                    })}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Select</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                </div>
           </div>
           </form>
+          {loading== true? 
+              <div className='m-auto text-center loading'>
+                <Discuss
+                className="text-center m-auto"
+                visible={true}
+                height="100"
+                width="180"
+                ariaLabel="color-ring-loading"
+                wrapperStyle={{}}
+                wrapperClass="color-ring-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                />
+              </div>
+              : ''}
       </div>
 
 {/* /////////////////////////////////////// */}
@@ -434,25 +460,60 @@ const [isSelectAll, setIsSelectAll] = useState(false);
         <p className='RegisterationTypep'>Your business, tell us more about you business</p>
           
           <form ref={formRef3} onSubmit={handleSubmit(onSubmitStep3)}  className='w-75 m-auto'>
-          <div className='d-flex align-items-center justify-content-between'>
-          <div className="mb-3 w-50 p-3">
-              <label htmlFor="exampleSelect" className="form-label">Classification</label>
-              <select
-                required
-                id="exampleSelect"
-                className="form-select py-3"
-                {...register("classification_idsss")}
-                defaultValue=""
-              >
-                <option value="" disabled>Select</option>
-                {registrationDropdowns.data.data[1].options.map((item, index) => (
-                  <option key={index} value={item.id}>{item.title}</option>
-                ))}
-              </select>
-              {errors.classification_ids && <div className="text-danger">{errors.classification_ids.message}</div>}
-            </div>
-          </div>
+              <div className='d-flex align-items-center justify-content-between'>
+                <div className="mb-3 w-50 p-3">
+                  <label htmlFor="uploadLogo" className="form-label">
+                    Upload Logo
+                  </label>
+                  <input
+                    type="file"
+                    id="uploadLogo"
+                    className="form-control py-3"
+                    {...register("logo")}
+                    accept="image/*"
+                  />
+                </div>
+                <div className="mb-3 w-50 p-3">
+                  <label htmlFor="uploadFile" className="form-label">
+                    Upload CR /  SCE ID ( For Ind )
+                  </label>
+                  <input
+                    type="file"
+                    id="uploadFile"
+                    className="form-control py-3"
+                    {...register("cr_sce_id")}
+                    accept="*/*"
+                  />
+                </div>
+              </div>
+              <div className='d-flex align-items-center justify-content-between'>
+              <div className="mb-3 w-50 p-3">
+                <label htmlFor="exampleTextarea" className="form-label">
+                Short Brief
+                </label>
+                <textarea
+                  id="exampleTextarea"
+                  className="form-control py-3"
+                  {...register("short_brief")}
+                  rows="2"
+                ></textarea>
+              </div>
+              </div>
           </form>
+          {loading== true? 
+              <div className='m-auto text-center loading'>
+                <Circles
+                className="text-center m-auto"
+                visible={true}
+                height="100"
+                width="180"
+                ariaLabel="color-ring-loading"
+                wrapperStyle={{}}
+                wrapperClass="color-ring-wrapper"
+                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                />
+              </div>
+              : ''}
         </div>
       </div>
     </div>

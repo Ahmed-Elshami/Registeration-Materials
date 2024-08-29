@@ -267,6 +267,14 @@ body{
     margin-top: 40px;
 }
 
+.resend{
+    text-decoration: underline;
+    color: #E59819;
+    cursor: pointer;
+}
+.resrndp{
+    color: #717171;
+}
 
 
 

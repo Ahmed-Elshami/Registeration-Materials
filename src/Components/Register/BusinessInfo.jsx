@@ -8,7 +8,7 @@ import { Circles, ColorRing, Discuss } from 'react-loader-spinner';
 
 export default function BusinessInfo({formRef,formRef2,formRef3,activeTab,setActiveStep, onTabChange,setActiveTab }) {
 
-let {register,handleSubmit,formState:{errors}}=useForm();
+let {register,handleSubmit,setValue,getValues,formState:{errors}}=useForm();
 const [error, setError] = useState()
 const [loading, setLoading]=useState(false)
 
@@ -106,57 +106,100 @@ toast.error(errors?.response?.data?.meta?.message)
 const [selectedItems, setSelectedItems] = useState([]);
 const [isSelectAll, setIsSelectAll] = useState(false);
 const [selectedItems2, setSelectedItems2] = useState([]);
+const [isSelectAll2, setIsSelectAll2] = useState(false);
 const [selectedItems3, setSelectedItems3] = useState([]);
+const [isSelectAll3, setIsSelectAll3] = useState(false);
 
 
   const handleCheckboxChange = (e, item) => {
     const { checked} = e.target;
-    
+    const currentValues = getValues("approved_by_ids") || []; // Check if values exist
+
 
     if (checked) {
       setSelectedItems((prev) => [...prev, item.title]);
+      setValue("approved_by_ids", [...currentValues, item.id]); // إضافة ID العنصر إلى الحقل
+
     } else {
       setSelectedItems((prev) => prev.filter((title) => title !== item.title));
+      setValue("approved_by_ids", currentValues.filter((id) => id !== item.id)); // إزالة ID العنصر من الحقل
+
     }
   };
 
   const handleCheckboxChange2 = (e, item) => {
-    const { checked} = e.target;
-    
+    const { checked } = e.target;
+    const currentValues = getValues("segment_ids") || []; // Check if values exist
 
     if (checked) {
       setSelectedItems2((prev) => [...prev, item.title]);
+      setValue("segment_ids", [...currentValues, item.id]);
     } else {
       setSelectedItems2((prev) => prev.filter((title) => title !== item.title));
+      setValue("segment_ids", currentValues.filter((id) => id !== item.id));
     }
   };
 
   const handleCheckboxChange3 = (e, item) => {
-    const { checked} = e.target;
-    
+    const { checked } = e.target;
+    const currentValues = getValues("target_ids") || []; // Check if values exist
 
     if (checked) {
       setSelectedItems3((prev) => [...prev, item.title]);
+      setValue("target_ids", [...currentValues, item.id]);
     } else {
       setSelectedItems3((prev) => prev.filter((title) => title !== item.title));
+      setValue("target_ids", currentValues.filter((id) => id !== item.id));
     }
   };
 
 
   const handleSelectAllChange = () => {
     const allItems = registrationDropdowns.data.data[2].options;
+    const allIds = allItems.map((item) => item.id); 
+
     if (isSelectAll) {
       setSelectedItems([]);
+      setValue("approved_by_ids", []);
     } else {
       setSelectedItems(allItems.map((item) => item.title));
+      setValue("approved_by_ids", allIds); 
     }
     setIsSelectAll(!isSelectAll);
+  };
+
+  const handleSelectAllChange2 = () => {
+    const allItems = registrationDropdowns.data.data[3].options;
+    const allIds = allItems.map((item) => item.id);
+  
+    if (isSelectAll2) {
+      setSelectedItems2([]);
+      setValue("segment_ids", []);
+    } else {
+      setSelectedItems2(allItems.map((item) => item.title));
+      setValue("segment_ids", allIds);
+    }
+    setIsSelectAll2(!isSelectAll2);
+  };
+
+  const handleSelectAllChange3 = () => {
+    const allItems = registrationDropdowns.data.data[4].options;
+    const allIds = allItems.map((item) => item.id);
+  
+    if (isSelectAll3) {
+      setSelectedItems3([]);
+      setValue("target_ids", []);
+    } else {
+      setSelectedItems3(allItems.map((item) => item.title));
+      setValue("target_ids", allIds);
+    }
+    setIsSelectAll3(!isSelectAll3);
   };
 
 
   return (
     <>
-     <div className='pb-5'>
+     <div className=''>
       <div className="tab-content" id="myTabContent">
         <div className={`tab-pane fade ${activeTab === 'home' ? 'show active' : ''}`} id="home" role="tabpanel" aria-labelledby="home-tab">
           <p className='RegisterationTypep'>Your business, tell us more about you business</p>
@@ -180,75 +223,7 @@ const [selectedItems3, setSelectedItems3] = useState([]);
               {errors.classification_ids && <div className="text-danger">{errors.classification_ids.message}</div>}
             </div>
 
-                {/* <div className="mb-3 w-50 p-3">
-                  <label htmlFor="approvedBy" className="form-label">Approved by</label>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-light border form-select py-3 w-100 text-start"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      Select
-                    </button>
-                    <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                      {registrationDropdowns.data.data[2].options.map((item, index) => (
-                        <li key={index} className="dropdown-item">
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              id={`approvedBy_${item.id}`}
-                              value={item.id}
-                              {...register("approved_by_ids",{ required: "Classification is required" })}
-                              className="form-check-input"
-                            />
-                            <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
-                              {item.title}
-                            </label>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
-                </div> */}
-
-                {/* <div className="mb-3 w-50 p-3">
-                  <label htmlFor="approvedBy" className="form-label">Approved by</label>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-light border form-select py-3 w-100 text-start"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      {selectedItems.length > 0 ? selectedItems.join(', ') : 'Select'}
-                    </button>
-                    <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                      {registrationDropdowns.data.data[2].options.map((item, index) => (
-                        <li key={index} className="dropdown-item">
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              id={`approvedBy_${item.id}`}
-                              value={item.id}
-                              {...register("approved_by_ids", { required: "Classification is required" })}
-                              className="form-check-input"
-                              onChange={(e) => handleCheckboxChange(e, item)}
-                            />
-                            <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
-                              {item.title}
-                            </label>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
-                </div> */}
-                <div className="mb-3 w-50 p-3">
+              <div className="mb-3 w-50 p-3">
                   <label htmlFor="approvedBy" className="form-label">Approved by</label>
                   <div className="dropdown">
                     <button
@@ -296,7 +271,7 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                     </ul>
                   </div>
                   {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
-                </div>
+              </div>
           </div>
 
           <div className='d-flex align-items-center justify-content-between'>
@@ -310,9 +285,23 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                       {selectedItems2.length > 0 ? selectedItems2.join(', ') : 'Select'}
+                      {selectedItems2.length > 0 ? selectedItems2.join(', ') : 'Select'}
                     </button>
                     <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                      <li className="dropdown-item">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            id="selectAll2"
+                            checked={isSelectAll2}
+                            className="form-check-input"
+                            onChange={handleSelectAllChange2}
+                          />
+                          <label htmlFor="selectAll2" className="form-check-label">
+                            Select All
+                          </label>
+                        </div>
+                      </li>
                       {registrationDropdowns.data.data[3].options.map((item, index) => (
                         <li key={index} className="dropdown-item">
                           <div className="form-check">
@@ -320,6 +309,7 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                               type="checkbox"
                               id={`segment_${item.id}`}
                               value={item.id}
+                              checked={selectedItems2.includes(item.title)}
                               {...register("segment_ids", { required: "segment is required" })}
                               className="form-check-input"
                               onChange={(e) => handleCheckboxChange2(e, item)}
@@ -335,41 +325,6 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                   {errors.segment_ids && <div className="text-danger">{errors.segment_ids.message}</div>}
                 </div>
 
-                     {/* <div className="mb-3 w-50 p-3">
-                  <label htmlFor="approvedBy" className="form-label">Approved by</label>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-light border form-select py-3 w-100 text-start"
-                      type="button"
-                      id="dropdownMenuButton"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      {selectedItems.length > 0 ? selectedItems.join(', ') : 'Select'}
-                    </button>
-                    <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                      {registrationDropdowns.data.data[2].options.map((item, index) => (
-                        <li key={index} className="dropdown-item">
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              id={`approvedBy_${item.id}`}
-                              value={item.id}
-                              {...register("approved_by_ids", { required: "Classification is required" })}
-                              className="form-check-input"
-                              onChange={(e) => handleCheckboxChange(e, item)}
-                            />
-                            <label htmlFor={`approvedBy_${item.id}`} className="form-check-label">
-                              {item.title}
-                            </label>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {errors.approved_by_ids && <div className="text-danger">{errors.approved_by_ids.message}</div>}
-                </div> */}
-
                 <div className="mb-3 w-50 p-3">
                   <label htmlFor="targetProjectSize" className="form-label">Target project size you can do</label>
                   <div className="dropdown">
@@ -380,9 +335,23 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                       {selectedItems3.length > 0 ? selectedItems3.join(', ') : 'Select'}
-                       </button>
+                      {selectedItems3.length > 0 ? selectedItems3.join(', ') : 'Select'}
+                    </button>
                     <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                      <li className="dropdown-item">
+                        <div className="form-check">
+                          <input
+                            type="checkbox"
+                            id="selectAll3"
+                            checked={isSelectAll3}
+                            className="form-check-input"
+                            onChange={handleSelectAllChange3}
+                          />
+                          <label htmlFor="selectAll3" className="form-check-label">
+                            Select All
+                          </label>
+                        </div>
+                      </li>
                       {registrationDropdowns.data.data[4].options.map((item, index) => (
                         <li key={index} className="dropdown-item">
                           <div className="form-check">
@@ -390,7 +359,8 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                               type="checkbox"
                               id={`targetProjectSize_${item.id}`}
                               value={item.id}
-                              {...register("target_ids",{ required: "target is required" })}
+                              checked={selectedItems3.includes(item.title)}
+                              {...register("target_ids", { required: "Target is required" })}
                               className="form-check-input"
                               onChange={(e) => handleCheckboxChange3(e, item)}
                             />
@@ -403,7 +373,6 @@ const [selectedItems3, setSelectedItems3] = useState([]);
                     </ul>
                   </div>
                   {errors.target_ids && <div className="text-danger">{errors.target_ids.message}</div>}
-
                 </div>
           </div>
           </form>
@@ -467,12 +436,12 @@ const [selectedItems3, setSelectedItems3] = useState([]);
           </div>
           </form>
           {loading== true? 
-              <div className='m-auto text-center loading'>
+              <div className='m-auto text-center'>
                 <Discuss
                 className="text-center m-auto"
                 visible={true}
-                height="100"
-                width="180"
+                height="80"
+                width="100"
                 ariaLabel="color-ring-loading"
                 wrapperStyle={{}}
                 wrapperClass="color-ring-wrapper"
@@ -528,12 +497,12 @@ const [selectedItems3, setSelectedItems3] = useState([]);
               </div>
           </form>
           {loading== true? 
-              <div className='m-auto text-center loading'>
+              <div className='m-auto text-center'>
                 <Discuss
                 className="text-center m-auto"
                 visible={true}
-                height="100"
-                width="180"
+                height="80"
+                width="100"
                 ariaLabel="color-ring-loading"
                 wrapperStyle={{}}
                 wrapperClass="color-ring-wrapper"

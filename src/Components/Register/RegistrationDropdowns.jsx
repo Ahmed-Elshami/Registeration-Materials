@@ -4,12 +4,25 @@ import { useForm } from 'react-hook-form';
 import { UserContext } from '../../Context/UserContext';
 import { ColorRing } from 'react-loader-spinner'
 import toast from 'react-hot-toast';
-
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import { isValidPhoneNumber, getPhoneNumberType } from 'react-phone-number-input';
 
 
 export default function RegistrationDropdowns({formRef,setActiveStep}) {
-
 let {specialities}=useContext(UserContext)
+const [phoneNumber, setPhoneNumber] = useState('');
+const [errorNumber, setErrorNumber] = useState('');
+
+const handlePhoneChange = (value) => {
+  setPhoneNumber(value);
+
+  if (value && isValidPhoneNumber(value)) {
+    setErrorNumber(''); // No error if the phone number is valid
+  } else {
+    setErrorNumber('The phone number is invalid for the selected country.');
+  }
+};
 
 ///////////
 let {register,handleSubmit,formState:{errors}}=useForm();
@@ -17,9 +30,13 @@ const [error, setError] = useState()
 const [loading, setLoading]=useState(false)
 
   const onSubmit=async (data)=>{
+    console.log(data);
+    
     setLoading(true)
     try {
       let response = await axios.post("https://uat-icons.com/Quote2supply/api/register", data)
+      console.log(response);
+      
       localStorage.setItem('materialsToken', response.data.data.token);
       setLoading(false)
       toast.success(response?.data?.meta.message);
@@ -99,7 +116,7 @@ const [selectedCountry, setSelectedCountry] = useState('');
                 </div>
 
                 <div className='d-flex align-items-center justify-content-between'>
-                    <div className="mb-3 w-50 p-3">
+                    {/* <div className="mb-3 w-50 p-3">
                         <label htmlFor="exampleInputPhoneNumber" className="form-label">Phone Number *</label>
                         <div className="d-flex">
                             <select className="form-select w-auto" id="countryCode">
@@ -119,7 +136,21 @@ const [selectedCountry, setSelectedCountry] = useState('');
                             />
                         </div>
                         {error?.phone && <p className='alert  text-danger p-0 m-0'>{error?.phone}</p>}
-                    </div>
+                    </div> */}
+
+        <div className="mb-3 w-50 p-3">
+              <label htmlFor="phoneNumberInput" className="form-label">Phone Number *</label>
+              <PhoneInput
+                international
+                countryCallingCodeEditable={false}
+                defaultCountry="SA"
+                value={phoneNumber}
+                onChange={handlePhoneChange}
+                className="form-control py-3"
+              />
+              {errorNumber && <p className='alert text-danger'>{errorNumber}</p>}
+              {error?.phone && <p className='alert text-danger p-0 m-0'>{error?.phone}</p>}
+            </div>
                     
                     <div className="mb-3 w-50 p-3">
                       <label htmlFor="exampleSelect" className="form-label">
@@ -208,11 +239,13 @@ const [selectedCountry, setSelectedCountry] = useState('');
                         {Countries[0].cities && Countries[0].cities.length > 0 ? (
                           <>
                             <label htmlFor="cities" className="form-label">Personal City</label>
-                            <select id="cities" className="form-select py-3"
-                            {...register("city_id", {
+                            <select required id="cities" className="form-select py-3"
+                            {...register("city_id", { required: "city  is required" } 
               
-                            })}
+                            )}
+                            defaultValue=""
                             >
+                              <option value="" disabled>Select</option>
                               {Countries[0].cities.map((city, index) => (
                                 <>
                                   <option key={index} value={city.id} >
@@ -298,7 +331,6 @@ const [selectedCountry, setSelectedCountry] = useState('');
               </div>
               : ''}
     </div>
-    
     </>
   )
 }

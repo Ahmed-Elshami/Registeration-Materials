@@ -199,7 +199,7 @@ console.log(selectedCompanyId);
         <button className='btn button1 m-2'
         //  disabled={activeStep === 0}
           onClick={handleBack}
-          style={{ display: activeStep === 0 || activeStep === 5 ? 'none' : 'inline-block' }}
+          style={{ display: activeStep === 0 || activeStep === 3 || activeStep === 4 || activeStep === 5 ? 'none' : 'inline-block' }}
           >
           Back
         </button>
